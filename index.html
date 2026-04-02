@@ -4,8 +4,346 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>h2on.io</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻‍❄️</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+
+        body {
+            font-family: "Noto Sans KR", sans-serif;
+            background: #191919;
+            color: #e0e0e0;
+        }
+
+        section {
+            scroll-snap-align: start;
+        }
+
+        /* ── Section 1: Greeting ── */
+        .section-greeting {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .greeting {
+            font-size: 4.8vw;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            height: 1.4em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 0.9em;
+            background: #fff;
+            vertical-align: baseline;
+            margin-left: 4px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .wiki-name {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 400;
+            color: #555;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .btn-enter {
+            margin-top: 40px;
+            font-family: "Noto Sans KR", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: #888;
+            background: none;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-enter:hover {
+            color: #fff;
+        }
+
+        .btn-enter span {
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-enter:hover span {
+            transform: translateX(4px);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        @keyframes fade-pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        /* ── Section 2: Chip Cards ── */
+        .section-cards {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chip-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 6px;
+            width: 440px;
+            height: 440px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            position: relative;
+        }
+
+        .chip-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+.card {
+            background: linear-gradient(145deg, #232323, #1c1c1c);
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: #444;
+            transform: scale(1.02);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 0 0px transparent);
+            transition: filter 0.3s ease;
+        }
+
+        .card-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .card-desc {
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            padding: 0 20px;
+            line-height: 1.5;
+        }
+
+        .card.core {
+            background: linear-gradient(145deg, #2a2a2a, #222);
+            border-color: #333;
+        }
+
+        .card.core .card-label {
+            font-size: 20px;
+        }
+
+        .card.core .card-desc {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* 그라데이션 배경 + glow */
+        .card.dev { background: linear-gradient(145deg, #1a2233, #1c1c1c); }
+        .card.wiki { background: linear-gradient(145deg, #1a2233, #1c1c1c); }
+        .card.book { background: linear-gradient(145deg, #1a2a1e, #1c1c1c); }
+        .card.life { background: linear-gradient(145deg, #2a2618, #1c1c1c); }
+        .card.infra { background: linear-gradient(145deg, #2a1a1e, #1c1c1c); }
+        .card.project { background: linear-gradient(145deg, #1a2a2e, #1c1c1c); }
+        .card.about { background: linear-gradient(145deg, #232323, #1c1c1c); }
+        .card.links { background: linear-gradient(145deg, #2a2218, #1c1c1c); }
+
+        .card.dev::before { background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1), transparent 70%); }
+        .card.wiki::before { background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1), transparent 70%); }
+        .card.book::before { background: radial-gradient(circle at center, rgba(34, 197, 94, 0.1), transparent 70%); }
+        .card.life::before { background: radial-gradient(circle at center, rgba(251, 191, 36, 0.1), transparent 70%); }
+        .card.infra::before { background: radial-gradient(circle at center, rgba(244, 63, 94, 0.1), transparent 70%); }
+        .card.project::before { background: radial-gradient(circle at center, rgba(6, 182, 212, 0.1), transparent 70%); }
+        .card.about::before { background: radial-gradient(circle at center, rgba(255, 255, 255, 0.06), transparent 70%); }
+        .card.links::before { background: radial-gradient(circle at center, rgba(251, 146, 60, 0.1), transparent 70%); }
+
+        .card.dev:hover { border-color: rgba(59, 130, 246, 0.4); }
+        .card.wiki:hover { border-color: rgba(59, 130, 246, 0.4); }
+        .card.book:hover { border-color: rgba(34, 197, 94, 0.4); }
+        .card.life:hover { border-color: rgba(251, 191, 36, 0.4); }
+        .card.infra:hover { border-color: rgba(244, 63, 94, 0.4); }
+        .card.project:hover { border-color: rgba(6, 182, 212, 0.4); }
+        .card.about:hover { border-color: rgba(255, 255, 255, 0.3); }
+        .card.links:hover { border-color: rgba(251, 146, 60, 0.4); }
+
+        .card.dev:hover .card-label { color: #3b82f6; }
+        .card.wiki:hover .card-label { color: #3b82f6; }
+        .card.book:hover .card-label { color: #22c55e; }
+        .card.life:hover .card-label { color: #fbbf24; }
+        .card.infra:hover .card-label { color: #f43f5e; }
+        .card.project:hover .card-label { color: #06b6d4; }
+        .card.about:hover .card-label { color: #fff; }
+        .card.links:hover .card-label { color: #fb923c; }
+
+        /* 아이콘 glow */
+        .card.dev:hover .card-icon { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6)); }
+        .card.wiki:hover .card-icon { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6)); }
+        .card.book:hover .card-icon { filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.6)); }
+        .card.life:hover .card-icon { filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6)); }
+        .card.infra:hover .card-icon { filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.6)); }
+        .card.project:hover .card-icon { filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.6)); }
+        .card.about:hover .card-icon { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4)); }
+        .card.links:hover .card-icon { filter: drop-shadow(0 0 8px rgba(251, 146, 60, 0.6)); }
+
+        /* 페이지 전환 페이드아웃 */
+        body.fade-out {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <!-- Section 1: Greeting -->
+    <section class="section-greeting">
+        <div class="greeting"><span id="text"></span><span class="cursor"></span></div>
+        <a href="pages/wiki.html?from=landing" class="btn-enter">Enter <span>→</span></a>
+        <div class="wiki-name">h2on's wiki</div>
+    </section>
+
+    <script>
+        // ── Typing animation ──
+        const greetings = [
+            "Hello",
+            "안녕하세요",
+            "こんにちは",
+            "你好",
+            "Bonjour",
+            "Hallo",
+            "Ciao",
+            "Hola",
+            "Olá",
+            "Привет",
+            "नमस्ते",
+            "สวัสดี",
+            "Xin chào",
+            "Merhaba",
+            "Hej",
+            "Halló",
+            "Aloha",
+            "Habari",
+        ];
+
+        const el = document.getElementById("text");
+        let current = 0;
+
+        const TYPE_SPEED = 120;
+        const DELETE_SPEED = 60;
+        const PAUSE_AFTER_TYPE = 2000;
+        const PAUSE_AFTER_DELETE = 400;
+
+        function type(word, i, cb) {
+            if (i <= word.length) {
+                el.textContent = word.slice(0, i);
+                setTimeout(() => type(word, i + 1, cb), TYPE_SPEED);
+            } else {
+                setTimeout(cb, PAUSE_AFTER_TYPE);
+            }
+        }
+
+        function erase(cb) {
+            const text = el.textContent;
+            if (text.length > 0) {
+                el.textContent = text.slice(0, -1);
+                setTimeout(() => erase(cb), DELETE_SPEED);
+            } else {
+                setTimeout(cb, PAUSE_AFTER_DELETE);
+            }
+        }
+
+        function loop() {
+            type(greetings[current], 0, () => {
+                erase(() => {
+                    current = (current + 1) % greetings.length;
+                    loop();
+                });
+            });
+        }
+
+        loop();
+
+        // ── Page transition ──
+        document.querySelector(".btn-enter").addEventListener("click", (e) => {
+            e.preventDefault();
+            const href = e.currentTarget.getAttribute("href");
+            document.body.classList.add("fade-out");
+            setTimeout(() => { window.location.href = href; }, 300);
+        });
+    </script>
 </body>
 </html>
