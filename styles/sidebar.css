@@ -41,6 +41,10 @@ body.from-landing .sidebar {
     animation: slide-in 0.5s ease;
 }
 
+.main {
+    animation: fade-in 0.3s ease;
+}
+
 body.from-landing .main {
     animation: fade-in 0.5s ease;
 }
@@ -197,6 +201,48 @@ body.from-landing .main {
     font-size: 14px;
     padding: 40px 0;
     text-align: center;
+}
+
+.card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.card-item {
+    background: #212121;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 20px;
+    text-decoration: none;
+    display: block;
+    transition: all 0.15s;
+}
+
+.card-item:hover {
+    border-color: #444;
+    background: #252525;
+}
+
+.card-item-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.card-item-desc {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.card-item-date {
+    font-size: 11px;
+    color: #555;
 }
 
 .content h2 {
