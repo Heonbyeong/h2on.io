@@ -7,7 +7,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻‍❄️</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,83 +15,143 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-            scroll-snap-type: y mandatory;
-        }
-
         body {
-            font-family: "Noto Sans KR", sans-serif;
-            background: #191919;
-            color: #e0e0e0;
+            font-family: "Inter", sans-serif;
+            background: #f0efed;
+            color: #1a1a1a;
+            overflow: hidden;
+            height: 100vh;
         }
 
-        section {
-            scroll-snap-align: start;
+        /* ── Grid background ── */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
         }
 
-        /* ── Section 1: Greeting ── */
-        .section-greeting {
+        /* ── Color blobs ── */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background: rgba(167, 139, 250, 0.35);
+            top: -10%;
+            right: -5%;
+        }
+
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(251, 191, 36, 0.3);
+            bottom: 10%;
+            left: -5%;
+            animation-delay: -7s;
+        }
+
+        .blob-3 {
+            width: 350px;
+            height: 350px;
+            background: rgba(59, 130, 246, 0.3);
+            top: 40%;
+            right: 20%;
+            animation-delay: -14s;
+        }
+
+        .blob-4 {
+            width: 300px;
+            height: 300px;
+            background: rgba(52, 211, 153, 0.25);
+            bottom: -5%;
+            right: 40%;
+            animation-delay: -3s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -40px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(15px, 30px) scale(1.02); }
+        }
+
+        /* ── Landing ── */
+        .landing {
             height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             position: relative;
+            z-index: 1;
         }
 
-        .greeting {
-            font-size: 4.8vw;
-            font-weight: 600;
-            color: #fff;
-            text-align: center;
-            height: 1.4em;
+        /* ── Text block ── */
+        .text-block {
+            text-align: left;
+            font-size: 5vw;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+        }
+
+        .text-block .line-static {
+            color: #1a1a1a;
+            line-height: 1.2;
+        }
+
+        /* ── Slot word ── */
+        .slot-wrapper {
+            overflow: hidden;
+            height: 1.3em;
+            position: relative;
+        }
+
+        .slot-track {
+            position: relative;
+            transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .slot-word {
+            line-height: 1.3;
+            height: 1.3em;
             display: flex;
             align-items: center;
-            justify-content: center;
+            color: rgba(0, 0, 0, 0.15);
+            opacity: 0.4;
+            transition: color 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 3px;
-            height: 0.9em;
-            background: #fff;
-            vertical-align: baseline;
-            margin-left: 4px;
-            animation: blink 1s step-end infinite;
+        .slot-word.active {
+            color: #1a1a1a;
+            opacity: 1;
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        .slot-word.leaving {
+            opacity: 0;
+            filter: blur(4px);
         }
 
-        .wiki-name {
-            position: absolute;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 13px;
-            font-weight: 400;
-            color: #555;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .quote {
-            margin-top: 24px;
-            font-size: 14px;
-            font-weight: 400;
-            color: #666;
-            letter-spacing: 0.5px;
-        }
-
+        /* ── Bottom controls ── */
         .btn-enter {
-            margin-top: 40px;
-            font-family: "Noto Sans KR", sans-serif;
+            margin-top: 48px;
+            font-family: "Inter", sans-serif;
             font-size: 14px;
-            font-weight: 400;
-            color: #888;
+            font-weight: 500;
+            color: #999;
             background: none;
             border: none;
             cursor: pointer;
@@ -101,10 +161,12 @@
             align-items: center;
             gap: 8px;
             text-decoration: none;
+            position: relative;
+            z-index: 2;
         }
 
         .btn-enter:hover {
-            color: #fff;
+            color: #1a1a1a;
         }
 
         .btn-enter span {
@@ -116,160 +178,20 @@
             transform: translateX(4px);
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(8px); }
-        }
-
-        @keyframes fade-pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
-        /* ── Section 2: Chip Cards ── */
-        .section-cards {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .chip-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 6px;
-            width: 440px;
-            height: 440px;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-            position: relative;
-        }
-
-        .chip-container.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-.card {
-            background: linear-gradient(145deg, #232323, #1c1c1c);
-            border: 1px solid #2a2a2a;
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: #e0e0e0;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .card::before {
-            content: "";
+        .wiki-name {
             position: absolute;
-            inset: 0;
-            border-radius: 16px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .card:hover {
-            border-color: #444;
-            transform: scale(1.02);
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        .card-icon {
-            font-size: 32px;
-            filter: drop-shadow(0 0 0px transparent);
-            transition: filter 0.3s ease;
-        }
-
-        .card-label {
-            font-size: 15px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .card-desc {
-            font-size: 11px;
-            color: #666;
-            text-align: center;
-            padding: 0 20px;
-            line-height: 1.5;
-        }
-
-        .card.core {
-            background: linear-gradient(145deg, #2a2a2a, #222);
-            border-color: #333;
-        }
-
-        .card.core .card-label {
-            font-size: 20px;
-        }
-
-        .card.core .card-desc {
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
             font-size: 12px;
-            color: #888;
+            font-weight: 500;
+            color: #aaa;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            z-index: 2;
         }
 
-        /* 그라데이션 배경 + glow */
-        .card.dev { background: linear-gradient(145deg, #1a2233, #1c1c1c); }
-        .card.wiki { background: linear-gradient(145deg, #1a2233, #1c1c1c); }
-        .card.book { background: linear-gradient(145deg, #1a2a1e, #1c1c1c); }
-        .card.life { background: linear-gradient(145deg, #2a2618, #1c1c1c); }
-        .card.infra { background: linear-gradient(145deg, #2a1a1e, #1c1c1c); }
-        .card.project { background: linear-gradient(145deg, #1a2a2e, #1c1c1c); }
-        .card.about { background: linear-gradient(145deg, #232323, #1c1c1c); }
-        .card.links { background: linear-gradient(145deg, #2a2218, #1c1c1c); }
-
-        .card.dev::before { background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1), transparent 70%); }
-        .card.wiki::before { background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1), transparent 70%); }
-        .card.book::before { background: radial-gradient(circle at center, rgba(34, 197, 94, 0.1), transparent 70%); }
-        .card.life::before { background: radial-gradient(circle at center, rgba(251, 191, 36, 0.1), transparent 70%); }
-        .card.infra::before { background: radial-gradient(circle at center, rgba(244, 63, 94, 0.1), transparent 70%); }
-        .card.project::before { background: radial-gradient(circle at center, rgba(6, 182, 212, 0.1), transparent 70%); }
-        .card.about::before { background: radial-gradient(circle at center, rgba(255, 255, 255, 0.06), transparent 70%); }
-        .card.links::before { background: radial-gradient(circle at center, rgba(251, 146, 60, 0.1), transparent 70%); }
-
-        .card.dev:hover { border-color: rgba(59, 130, 246, 0.4); }
-        .card.wiki:hover { border-color: rgba(59, 130, 246, 0.4); }
-        .card.book:hover { border-color: rgba(34, 197, 94, 0.4); }
-        .card.life:hover { border-color: rgba(251, 191, 36, 0.4); }
-        .card.infra:hover { border-color: rgba(244, 63, 94, 0.4); }
-        .card.project:hover { border-color: rgba(6, 182, 212, 0.4); }
-        .card.about:hover { border-color: rgba(255, 255, 255, 0.3); }
-        .card.links:hover { border-color: rgba(251, 146, 60, 0.4); }
-
-        .card.dev:hover .card-label { color: #3b82f6; }
-        .card.wiki:hover .card-label { color: #3b82f6; }
-        .card.book:hover .card-label { color: #22c55e; }
-        .card.life:hover .card-label { color: #fbbf24; }
-        .card.infra:hover .card-label { color: #f43f5e; }
-        .card.project:hover .card-label { color: #06b6d4; }
-        .card.about:hover .card-label { color: #fff; }
-        .card.links:hover .card-label { color: #fb923c; }
-
-        /* 아이콘 glow */
-        .card.dev:hover .card-icon { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6)); }
-        .card.wiki:hover .card-icon { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.6)); }
-        .card.book:hover .card-icon { filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.6)); }
-        .card.life:hover .card-icon { filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6)); }
-        .card.infra:hover .card-icon { filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.6)); }
-        .card.project:hover .card-icon { filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.6)); }
-        .card.about:hover .card-icon { filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4)); }
-        .card.links:hover .card-icon { filter: drop-shadow(0 0 8px rgba(251, 146, 60, 0.6)); }
-
-        /* 페이지 전환 페이드아웃 */
+        /* ── Fade-out transition ── */
         body.fade-out {
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -277,76 +199,105 @@
     </style>
 </head>
 <body>
-    <!-- Section 1: Greeting -->
-    <section class="section-greeting">
-        <div class="greeting">🐻‍❄️ <span id="text"></span><span class="cursor"></span></div>
-        <div class="quote">"멈추지 않는 이상, 얼마나 천천히 가는지는 문제가 되지 않는다"</div>
-        <a href="pages/wiki.html?from=landing" class="btn-enter">Enter <span>→</span></a>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+
+    <section class="landing">
+        <div class="text-block">
+            <div class="line-static">Knowledge</div>
+            <div class="line-static">is</div>
+            <div class="slot-wrapper">
+                <div class="slot-track" id="slot">
+                    <!-- words populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <a href="pages/wiki.html?from=landing" class="btn-enter">Enter <span>&rarr;</span></a>
         <div class="wiki-name">h2on's wiki</div>
     </section>
 
     <script>
-        // ── Typing animation ──
-        const greetings = [
-            "Hello",
-            "안녕하세요",
-            "こんにちは",
-            "你好",
-            "Bonjour",
-            "Hallo",
-            "Ciao",
-            "Hola",
-            "Olá",
-            "Привет",
-            "नमस्ते",
-            "สวัสดี",
-            "Xin chào",
-            "Merhaba",
-            "Hej",
-            "Halló",
-            "Aloha",
-            "Habari",
+        const words = [
+            "🐻‍❄️.",
+            "experience.",
+            "pleasure.",
+            "wealth.",
+            "life.",
+            "power.",
+            "journey.",
+            "everything.",
         ];
 
-        const el = document.getElementById("text");
+        const slot = document.getElementById("slot");
+        const ITEM_HEIGHT_EM = 1.3;
+
+        // Build slot items
+        words.forEach((w, i) => {
+            const div = document.createElement("div");
+            div.className = "slot-word";
+            div.textContent = w;
+            if (i === 0) div.classList.add("active");
+            slot.appendChild(div);
+        });
+
+        // Duplicate first few for seamless wrap
+        for (let i = 0; i < 2; i++) {
+            const div = document.createElement("div");
+            div.className = "slot-word";
+            div.textContent = words[i];
+            slot.appendChild(div);
+        }
+
+        const allSlots = slot.querySelectorAll(".slot-word");
         let current = 0;
+        const HOLD = 1200;
 
-        const TYPE_SPEED = 120;
-        const DELETE_SPEED = 60;
-        const PAUSE_AFTER_TYPE = 2000;
-        const PAUSE_AFTER_DELETE = 400;
+        function next() {
+            // Mark current as leaving
+            allSlots[current].classList.remove("active");
+            allSlots[current].classList.add("leaving");
+            current++;
 
-        function type(word, i, cb) {
-            if (i <= word.length) {
-                el.textContent = word.slice(0, i);
-                setTimeout(() => type(word, i + 1, cb), TYPE_SPEED);
-            } else {
-                setTimeout(cb, PAUSE_AFTER_TYPE);
+            // Slide up
+            slot.style.transform = `translateY(-${current * ITEM_HEIGHT_EM}em)`;
+
+            // Highlight new
+            allSlots[current].classList.add("active");
+
+            // Clean up leaving class
+            const prev = current - 1;
+            setTimeout(() => {
+                allSlots[prev].classList.remove("leaving");
+            }, 500);
+
+            // Seamless loop reset
+            if (current >= words.length) {
+                setTimeout(() => {
+                    slot.style.transition = "none";
+                    allSlots.forEach(el => {
+                        el.style.transition = "none";
+                        el.classList.remove("active", "leaving");
+                    });
+
+                    current = 0;
+                    slot.style.transform = `translateY(0)`;
+                    allSlots[0].classList.add("active");
+
+                    slot.offsetHeight;
+                    slot.style.transition = "transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)";
+                    allSlots.forEach(el => {
+                        el.style.transition = "";
+                    });
+                }, 750);
             }
         }
 
-        function erase(cb) {
-            const text = el.textContent;
-            if (text.length > 0) {
-                el.textContent = text.slice(0, -1);
-                setTimeout(() => erase(cb), DELETE_SPEED);
-            } else {
-                setTimeout(cb, PAUSE_AFTER_DELETE);
-            }
-        }
+        setInterval(next, HOLD);
 
-        function loop() {
-            type(greetings[current], 0, () => {
-                erase(() => {
-                    current = (current + 1) % greetings.length;
-                    loop();
-                });
-            });
-        }
-
-        loop();
-
-        // ── Page transition ──
+        // Page transition
         document.querySelector(".btn-enter").addEventListener("click", (e) => {
             e.preventDefault();
             const href = e.currentTarget.getAttribute("href");
