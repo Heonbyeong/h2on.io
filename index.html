@@ -21,6 +21,7 @@
             color: #1a1a1a;
             overflow: hidden;
             height: 100vh;
+            cursor: pointer;
         }
 
         /* ── Grid background ── */
@@ -145,39 +146,6 @@
             filter: blur(4px);
         }
 
-        /* ── Bottom controls ── */
-        .btn-enter {
-            margin-top: 48px;
-            font-family: "Inter", sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            color: #999;
-            background: none;
-            border: none;
-            cursor: pointer;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            position: relative;
-            z-index: 2;
-        }
-
-        .btn-enter:hover {
-            color: #1a1a1a;
-        }
-
-        .btn-enter span {
-            transition: transform 0.3s ease;
-            display: inline-block;
-        }
-
-        .btn-enter:hover span {
-            transform: translateX(4px);
-        }
-
         .wiki-name {
             position: absolute;
             bottom: 28px;
@@ -194,7 +162,7 @@
         /* ── Fade-out transition ── */
         body.fade-out {
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
         }
     </style>
 </head>
@@ -215,7 +183,6 @@
             </div>
         </div>
 
-        <a href="pages/wiki.html?from=landing" class="btn-enter">Enter <span>&rarr;</span></a>
         <div class="wiki-name">h2on's wiki</div>
     </section>
 
@@ -297,12 +264,17 @@
 
         setInterval(next, HOLD);
 
-        // Page transition
-        document.querySelector(".btn-enter").addEventListener("click", (e) => {
-            e.preventDefault();
-            const href = e.currentTarget.getAttribute("href");
+        // Click anywhere to enter
+        let navigating = false;
+
+        document.body.addEventListener("click", (e) => {
+            if (navigating) return;
+            navigating = true;
+
             document.body.classList.add("fade-out");
-            setTimeout(() => { window.location.href = href; }, 300);
+            setTimeout(() => {
+                window.location.href = "pages/wiki.html?from=landing";
+            }, 400);
         });
     </script>
 </body>
