@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zap</title>
+  <meta name="description" content="Zap은 ⌥Space 핫키로 떠오르는 플로팅 입력 패널입니다. 화면을 옮기지 않고 Apple Terminal · iTerm2 · Ghostty의 어떤 탭에든 명령을 보냅니다." />
+  <meta name="color-scheme" content="dark" />
+  <meta property="og:title" content="Zap — 어디서나 ⌥Space, 명령은 터미널로" />
+  <meta property="og:description" content="화면을 옮기지 않고 모든 터미널에 명령을 보내는 macOS 플로팅 입력기입니다." />
+  <link rel="icon" type="image/png" href="assets/icon.png" />
+  <link rel="apple-touch-icon" href="assets/icon.png" />
+  <meta property="og:image" content="assets/icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <main id="top">
+    <!-- Hero header — nav 와 MacBook mock 사이. 로고 + 다운로드 CTA + 환경 정보. -->
+    <section class="hero-title">
+      <h1 class="brand large">
+        <img class="brand-icon" src="assets/icon.png" alt="" />
+        <span>Zap</span>
+      </h1>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/heonbyeong/zap/releases/latest/download/Zap.dmg">
+          Download for macOS <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+      <dl class="cta-meta">
+        <div class="cta-meta-row">
+          <dt>macOS</dt>
+          <dd>Apple Silicon · 13+</dd>
+        </div>
+        <div class="cta-meta-row">
+          <dt>Terminals</dt>
+          <dd>Apple Terminal · iTerm2 · Ghostty</dd>
+        </div>
+        <div class="cta-meta-row">
+          <dt>Shells</dt>
+          <dd>zsh · bash · fish</dd>
+        </div>
+      </dl>
+      <p class="cta-note">서명 없는 빌드 — 첫 실행은 우클릭 → 열기</p>
+    </section>
+
+    <!-- Hero — 스크롤 시퀀스: pin 후 panel fade-in → "Hello, Zap!" 타이핑 → 노치 HUD descend.
+         view-timeline 으로 contain phase 진행도(0–100%) 를 3단계로 분배. -->
+    <div class="scrolly">
+      <div class="scrolly-pin">
+    <div class="hero-frame">
+      <div class="hero-bezel">
+        <div class="hero-screen">
+          <!-- 노치 자체가 compact → expanded 로 확장되며 .notch-body 가 페이드인. notch-section 과 동일 패턴. -->
+          <div class="hero-notch" aria-hidden="true">
+            <svg class="notch-svg" viewBox="0 0 384 100" preserveAspectRatio="none">
+              <path
+                class="notch-fill"
+                d="M0 0
+                   Q12 0 12 12
+                   L12 78
+                   Q12 100 34 100
+                   L350 100
+                   Q372 100 372 78
+                   L372 12
+                   Q372 0 384 0
+                   Z"
+              />
+            </svg>
+            <div class="notch-body">
+              <svg class="notch-status" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 8.5l3.2 3.2L13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="notch-text">
+                <span class="notch-cmd">Hello, Zap!</span>
+                <span class="notch-meta">
+                  <span class="meta-item">
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <rect x="2" y="3.5" width="12" height="9" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                      <path d="M4.5 7l1.6 1.5-1.6 1.5M7.8 9.6h3" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    iTerm2
+                  </span>
+                  <span class="meta-sep">·</span>
+                  <span class="meta-item">
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <circle cx="8" cy="9" r="5.2" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                      <path d="M8 6v3.2l1.8 1.2M6.5 2.5h3M8 2.5v2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                    0.4s
+                  </span>
+                  <span class="meta-sep">·</span>
+                  <span class="meta-item">
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                      <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                      <path d="M8 4.5V8l2.4 1.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                    방금
+                  </span>
+                </span>
+              </div>
+              <button class="notch-nav" type="button" aria-label="터미널로 이동" tabindex="-1">
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+    <section class="hero">
+      <!-- Panel mock — TabSelectorView + input + outputHint, 실제 UI 와 동일한 구조 -->
+      <div class="panel-stage" aria-hidden="true">
+        <div class="panel">
+          <!-- TabSelectorView: 가로 스크롤 한 줄. terminal chips | divider | tab pills -->
+          <div class="panel-tabbar">
+            <div class="tab-track">
+              <span class="term-chip is-active" title="iTerm2">
+                <span class="term-icon term-iterm"></span>
+                <span class="term-shortcut">⌘1</span>
+              </span>
+              <span class="term-chip" title="Ghostty">
+                <span class="term-icon term-ghostty"></span>
+                <span class="term-shortcut">⌘2</span>
+              </span>
+              <span class="chip-divider" aria-hidden="true"></span>
+              <span class="tab-pill is-selected">
+                <svg class="status-icon status-running" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M13.5 4.2A6 6 0 1 0 14 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M14 1.5v3.4h-3.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>build</span>
+              </span>
+              <span class="tab-pill">
+                <svg class="status-icon status-success" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>api</span>
+              </span>
+              <span class="tab-pill">
+                <svg class="status-icon status-fail" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                <span>test</span>
+              </span>
+              <span class="tab-pill">
+                <svg class="status-icon status-aborted" viewBox="0 0 16 16" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.4"/>
+                  <path d="M3.8 12.2L12.2 3.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+                <span>watch</span>
+              </span>
+              <span class="tab-pill">
+                <svg class="status-icon status-success" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>logs</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="panel-divider"></div>
+
+          <!-- inputField -->
+          <div class="panel-input">
+            <svg class="panel-prompt" viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M6 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="panel-text"><span class="panel-typed" data-stagger>Hello, Zap!</span><span class="caret"></span></span>
+          </div>
+
+          <!-- outputHint — showOutput=false 일 때 우측 정렬 -->
+          <div class="panel-output-hint">
+            <span class="output-hint-kbd">⌘O</span>
+            <span class="output-hint-label">Terminal Output</span>
+          </div>
+        </div>
+      </div>
+    </section>
+        </div>
+      </div>
+    </div>
+      </div>
+    </div>
+
+    <!-- MacBook 바깥 아래쪽 — hero 설명. CTA 는 위 hero-title 으로 이동했으므로 여기는 카피만. -->
+    <section class="hero-description">
+      <span class="eyebrow">macOS · 메뉴바 앱</span>
+      <p class="lede">
+        화면을 옮기지 않고, 한 입력창에서 원하는 터미널 탭에 명령을 보냅니다.<br />
+        창을 떠나도, 끝나는 순간을 놓치지 않고 알려줍니다.
+      </p>
+    </section>
+
+    <!-- 3-up -->
+    <section id="features" class="features">
+      <header class="section-head">
+        <span class="eyebrow">Features</span>
+        <h2>언제 어디서든, 명령과 함께.</h2>
+      </header>
+      <div class="features-grid">
+      <article class="feature">
+        <div class="feature-icon" aria-hidden="true">
+          <kbd>⌥</kbd><kbd>Space</kbd>
+        </div>
+        <h3>플로팅 입력</h3>
+        <p>어떤 앱 위에서든 ⌥Space만 누르면 작은 패널이 떠오릅니다. 명령을 입력하고 Enter를 누르면, 그게 전부입니다.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon" aria-hidden="true">
+          <kbd>⌘</kbd><span class="num">1–9</span>
+        </div>
+        <h3>멀티 터미널 라우팅</h3>
+        <p>⌘1~9로 터미널 그룹을 점프하고, Tab으로 같은 그룹 안의 탭을 순환합니다. 명령은 항상 의도한 탭으로 정확하게 전달됩니다.</p>
+      </article>
+      <article class="feature">
+        <div class="feature-icon notch" aria-hidden="true">
+          <svg class="notch-icon" viewBox="0 0 384 100" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="notch-icon-stroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#808080"/>
+                <stop offset="50%" stop-color="#f2f2f2"/>
+                <stop offset="100%" stop-color="#808080"/>
+              </linearGradient>
+            </defs>
+            <path
+              d="M0 0
+                 Q12 0 12 12
+                 L12 78
+                 Q12 100 34 100
+                 L350 100
+                 Q372 100 372 78
+                 L372 12
+                 Q372 0 384 0"
+              fill="none"
+              stroke="url(#notch-icon-stroke)"
+              stroke-width="4"
+              stroke-linejoin="round"
+              stroke-linecap="round"
+            />
+            <g transform="translate(176 50) scale(2)" fill="none" stroke="rgba(74, 222, 128, 0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8.5l3.2 3.2L13 4.5"/>
+            </g>
+          </svg>
+        </div>
+        <h3>노치 알림</h3>
+        <p>창을 떠나도 명령은 계속 실행됩니다. 끝나는 순간 노치가 살짝 펼쳐져 결과와 소요 시간을 알려줍니다.</p>
+      </article>
+      </div>
+    </section>
+
+    <!-- Shortcuts -->
+    <section id="shortcuts" class="shortcuts">
+      <header class="section-head">
+        <span class="eyebrow">Shortcut</span>
+        <h2>키보드 한 번이면 충분합니다.</h2>
+      </header>
+      <dl class="kbd-grid">
+        <div class="kbd-row"><dt><kbd>⌥</kbd><kbd>Space</kbd></dt><dd>패널 열기·닫기</dd></div>
+        <div class="kbd-row"><dt><kbd>⌥</kbd><kbd>.</kbd></dt><dd>노치 HUD 닫기</dd></div>
+        <div class="kbd-row"><dt><kbd>⌥</kbd><kbd>↵</kbd></dt><dd>노치에서 해당 터미널로 이동</dd></div>
+        <div class="kbd-row"><dt><kbd>⌘</kbd><kbd>1</kbd>–<kbd>9</kbd></dt><dd>터미널 그룹 점프</dd></div>
+        <div class="kbd-row"><dt><kbd>Tab</kbd> / <kbd>⇧</kbd><kbd>Tab</kbd></dt><dd>탭 · 자동완성 순환</dd></div>
+        <div class="kbd-row"><dt><kbd>↑</kbd> / <kbd>↓</kbd></dt><dd>히스토리 · 자동완성</dd></div>
+        <div class="kbd-row"><dt><kbd>⌘</kbd><kbd>O</kbd></dt><dd>출력 영역 펼치기·접기</dd></div>
+        <div class="kbd-row"><dt><kbd>Esc</kbd></dt><dd>패널 닫기</dd></div>
+      </dl>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="brand small">
+        <img class="brand-icon" src="assets/icon.png" alt="" />
+        Zap
+      </span>
+      <span class="muted">Built with Swift · macOS</span>
+      <a class="muted" href="https://github.com/heonbyeong/zap" target="_blank" rel="noreferrer">GitHub</a>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
